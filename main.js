@@ -1,56 +1,52 @@
+import { Catserviceprof } from './Catservice'
 import './style.css'
-import { Catservice } from './Catservice'
 import confetti from 'canvas-confetti'
 
-console.log('ciao');
+let globalFact;
 
+pagePrepare();
 
- 
+function pagePrepare() {
+    const button1 = document.getElementById('add-fact');
+    button1.addEventListener('click', getData);
+    const button2 = document.getElementById('new-fact');
+    button2.addEventListener('click', getNewData);
+    getNewData();
+}
 
+function getData() {
+    const mainDiv = document.getElementById('app');
+    if (globalFact.length !== 0) {
+        fire();
+        const el = globalFact.pop();
+        console.log(el);
 
+        const p = document.createElement('p');
+        const textNode = document.createTextNode(el);
 
-  const button = document.getElementById('add-fact');
-  button.addEventListener('click', displayFact);
+        p.appendChild(textNode);
+        mainDiv.appendChild(p);
+    }
+}
 
+function getNewData() {
+    
+    const mainDiv = document.getElementById('app');
+    mainDiv.innerHTML='';
+    Catserviceprof.getfacts().then(data => displayFact(data))
+    
+}
 
- function get5fact() {
-   const requests = [];
-   for (let i = 0; i < 5; i++) {
-     Catservice.getFact().then(obj=>{ requests.push(obj.fact)});
-   }
-   console.log(requests);
-   console.log(requests.length);
-   return requests;
- }
+function displayFact(facts) {
+    globalFact = facts;
+}
 
-
- function displayFact() {
-   const mainDiv= document.getElementById('app');
-   mainDiv.innerHTML='';
-   fire();
-
-   const facts= get5fact();
-
-
-   for (const element of facts)  {
-     const el = element.fact;
-     console.log(element);
-
-     const p = document.createElement('p');
-     const textNode = document.createTextNode(el);
-
-     p.appendChild(textNode);
-     mainDiv.appendChild(p);
-
-   }
- }
 
 
 function fire() {
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 }
-  });
+    confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+    });
 }
-
